@@ -31,12 +31,14 @@
 
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
+  --color-white: #eee;
 
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
   --color-primary: #0075ff;
   --color-secondary: #F23B6F;
+  --color-input: #6c7e93;
   --colors-error: #FF4444;
 
   --section-gap: 160px;
