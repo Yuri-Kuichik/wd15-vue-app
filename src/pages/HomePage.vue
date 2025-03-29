@@ -23,7 +23,7 @@ export default {
   },
 
   methods: {
-    
+
   },
 
   computed: {
@@ -31,7 +31,7 @@ export default {
   },
 
   async created() {
-   
+
   }
 }
 </script>
@@ -42,7 +42,7 @@ export default {
     <div v-else class="spinner-wrapper d-flex d-flex_jcc d-flex_aic">
       <VueSpinner size="l"/>
     </div>
-  </BaseLayout> 
+  </BaseLayout>
 </template>
 
 
