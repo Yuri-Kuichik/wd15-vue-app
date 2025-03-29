@@ -33,7 +33,7 @@ export default {
 
 
 <style lang="scss" scoped>
-  .button {
+  button {
     display: flex;
     flex-grow: 1;
     align-items: center;
@@ -48,7 +48,6 @@ export default {
     max-width: 100%;
     width: 100%;
     height: 48px;
-    max-width: 240px;
 
     &.disabled {
       cursor: cell;
@@ -56,7 +55,7 @@ export default {
     }
   }
 
-  .input {
+  input {
     padding: 8px 12px;
     width: 100%;
     min-height: 32px;
