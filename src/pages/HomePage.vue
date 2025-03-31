@@ -1,33 +1,57 @@
 <script>
-import BaseLayout from '@/components/BaseLayout.vue';
+import PostList from '@/components/PostList.vue';
 
 export default {
   components: {
-    BaseLayout
+    PostList
   },
 
   data() {
     return {
-      count: 0
+      postListData: [],
+      limit: 5,
+      search: ''
     }
   },
 
   methods: {
-    
+    // этот метод нужно перенести в компонент PostList.vue
+    async getPostList(search = this.search, limit = this.limit) {
+
+      try {
+        this.loading = true;
+
+        const response = await fetch(`https://studapi.teachmeskills.by/blog/posts?author__course_group=15&limit=${limit}&search'=${search}`)
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json()
+
+          this.postListData = data.results
+      } catch(error) {
+        console.log(error.message)
+      } finally {
+        this.loading = false;
+      }
+    }
   },
 
   computed: {
     
+  },
+
+  async created() {
+    await this.getPostList();
   }
 }
 </script>
 
 <template>
-  <BaseLayout>
-    <button @click="count++">Вы нажали на меня {{ count }} раз.</button>
+  <MyBaseLayout>
+    <!-- Здесь можно добавить input (BaseInput) и button (BaseButton) для фильтрации списка по клику на кнопку с текстом 'Search' -->
 
-    <!-- Здесь ваш код Counter и Calculator -->
-  </BaseLayout> 
+    <!-- здесь компонент PostList -->
+  </MyBaseLayout> 
 </template>
 
 

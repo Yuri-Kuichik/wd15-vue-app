@@ -8,8 +8,10 @@
             IconShow
         },
 
+        emits: ['update:modelValue'],
+
         props: {
-            value: String,
+            modelValue: String,
             type: {
                 type: String,
                 default: 'text'
@@ -52,8 +54,8 @@
 
         methods: {
             updateModel(val) {
-                this.$emit('changeValue', val)
-                // this.$emit('update:modelValue', val)
+                // this.$emit('changeValue', val)
+                this.$emit('update:modelValue', val)
             }
         }
     }
@@ -65,7 +67,7 @@
             <label :for="name">{{ label }}</label>
             <input 
                 :type="type" 
-                :value="value"
+                :value="modelValue"
                 @input="updateModel($event.target.value)"
                 :id="name"
                 :placeholder="placeholder"
