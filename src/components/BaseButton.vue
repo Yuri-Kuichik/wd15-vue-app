@@ -1,14 +1,14 @@
 <template>
-    <button class="base-button" :class="rootClass" :disabled="isDisabled">
-        <VueSpinner v-if="loading" />
-        <span v-else>  
+  <button class="base-button" :class="rootClass" @click="$emit(customEvent)" :disabled="isDisabled">
+    <VueSpinner v-if="loading"/>
+    <span v-else>
             <slot></slot>
         </span>
-    </button>  
+  </button>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import {computed} from 'vue'
 
 import VueSpinner from './VueSpinner.vue';
 
@@ -24,12 +24,15 @@ const props = defineProps({
     isDisabled: {
         type: Boolean,
         default: false
-    }
+    },
+    customEvent: {
+        type: String,
+        default: 'customEvent'
+    },
 })
 
 const rootClass = computed(() => {
-   return { 
-        [`base-button_size--${props.size}`]: true,
+  return {[`base-button_size--${props.size}`]: true,
         ['is-disabled']: props.isDisabled,
     }
 })
@@ -38,20 +41,17 @@ const rootClass = computed(() => {
 
 <style lang=scss scoped>
 .base-button {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-    padding: 0 12px;
-    background: rgb(253, 211, 42);
-    color: rgb(7, 7, 7);
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 600;
-    max-width: 100%;
-    width: 100%;
-    height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  background: rgb(253, 211, 42);
+  color: rgb(7, 7, 7);
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  height: 48px;
 
     &.is-disabled {
         // background: rgba(253, 211, 42, 0.5);

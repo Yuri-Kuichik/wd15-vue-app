@@ -1,58 +1,41 @@
 <script>
-import { useFetch } from '@/composables/useFetch';
-import PostListItem from '@/components/PostListItem.vue'
+import PostListItem from "@/components/PostListItem.vue";
 
 export default {
   components: {
-    PostListItem
+    PostListItem,
   },
-
-  setup() {
-    const { data, error, loading, fetchData } = useFetch();
-
-    return {
-      data, error, loading, fetchData
-    }
-  },
-
+  props: [`searchText`],
   data() {
     return {
       postListData: [],
-      postsLimit: 5,
-      searchString: '',
+      limit: 5,
     }
   },
 
   methods: {
-    async getPostList() {
-      const url = `https://studapi.teachmeskills.by/blog/posts?author__course_group=15&limit=${this.postsLimit}&search=${this.searchString}`
-      this.fetchData(url)
+    async getPostList(search = this.searchText, limit = this.limit) {
+      try {
+        this.loading = true;
 
-      // try {
-      //   this.loading = true;
+        const response = await fetch(`https://studapi.teachmeskills.by/blog/posts?author__course_group=15&limit=${limit}&search=${search}`)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json()
 
-      //   const response = await fetch(url)
-      //     if (!response.ok) {
-      //       throw new Error(`HTTP error! status: ${response.status}`);
-      //     }
-      //     const data = await response.json()
-
-      //     this.postListData = data.results
-      // } catch(error) {
-      //   console.log(error.message)
-      // } finally {
-      //   this.loading = false;
-      // }
-    },
-
-    openPagePost(id) {
-      console.log('post id: ', id)
+        this.postListData = data.results
+      } catch (error) {
+        console.log(error.message)
+      } finally {
+        this.loading = false;
+      }
     }
   },
 
-  computed: {
-    postList() {
-      return this.data?.results
+  watch: {
+    searchText(newQuery) {
+        this.getPostList(newQuery);
     }
   },
 
@@ -64,53 +47,10 @@ export default {
 </script>
 
 <template>
-  <section class="post-list">
-    <div class="post-list__search-wrapper">
-      <BaseInput 
-        class="post-list__search-input" 
-        placeholder="Input post text"
-        v-model="searchString"
-      />
-      <BaseButton class="post-list__search-button" @click="getPostList">
-        Search
-      </BaseButton>
+  <section>
+    <div v-for="post in postListData" :key="post.id">
+      <PostListItem :model="post"></PostListItem>
     </div>
-
-    <div v-for="post in postList" :key='post.id'>
-      <PostListItem :model="post" @click="openPagePost(post.id)"/>
-    </div>
+    <div v-if="!postListData.length">Посты не найдены.</div>
   </section>
-
 </template>
-
-
-<style lang="scss" scoped>
-.post-list {
-  padding: 32px 16px; 
-  background-color: rgba(0,0,0, .03);
-  border-radius: 8px; 
-
-  &__search-input {
-    padding-bottom: 20px;
-  }
-
-  &__search-wrapper {
-    display: flex; 
-    gap: 12px;
-
-    .post-list__search-input {
-      flex-grow: 1;
-    }
-
-    .post-list__search-button {
-      max-width: 200px;
-    }
-  }
-
-  .limit {
-    margin-right: 12px; 
-    cursor: pointer;
-  }
-}
-
-</style>

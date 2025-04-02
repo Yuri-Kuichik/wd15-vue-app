@@ -2,71 +2,63 @@
 export default {
   data() {
     return {
-      
+
     }
   },
 
   props: {
     model: {
       type: Object,
-      requerded: true
+      required: true
     }
   },
 
   created() {
-    
+
   }
 }
 
 </script>
 
 <template>
-  <div class="post-list-item">
-    <div class="post-list-item__content">
-      <h2 class="post-list-item__title">{{ model?.title }}</h2>
-      <p class="post-list-item__description">{{ model?.description }}</p>
+  <div class="post_wrapper d-flex">
+    <div class="post_content">
+      <h2>{{ model?.title }}</h2>
+      <p>{{ model?.description }}</p>
     </div>
-    <img :src="model?.image" alt="post image">
+    <div class="post_image">
+      <img :src="model?.image" :alt="model.id">
+    </div>
   </div>
 </template>
 
-<style>
-  .post-list-item {
-    margin-bottom: 24px;
-  }
-
-  .content {
-    flex-grow: 1;
-  }
-
-  .post-image {
-    width: 200px;
-  }
-</style>
-
 <style lang="scss" scoped>
-.post-list-item {
-  display: flex;
-  max-width: 100%;
-  margin-bottom: 20px;
-  cursor: pointer;
-
-  &__content {
-    flex-grow: 1;
-  }
-
-  &__title {
-    text-align: center;
-  }
-
-  &__description {
-    color: var(--vt-c-black-mute)
-  }
-
-  img {
-    width: 200px;
-    height: fit-content;
-  }
+.d-flex {
+  align-items: center;
+  justify-content: space-between;
 }
 
+.post_wrapper {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+
+  .post_content {
+    padding: 10px;
+    margin: 10px 0;
+  }
+
+  .post_image {
+    position: relative;
+    max-width: 200px;
+    border: 2px solid #000;
+    overflow: hidden;
+
+    & > img {
+        width: 100%;
+        height: auto;
+    }
+  }
+}
 </style>
