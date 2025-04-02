@@ -14,7 +14,7 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
-app.component('MyBaseLayout', BaseLayout);
+app.component('BaseLayout', BaseLayout);
 app.component('BaseInput', BaseInput);
 
 app.mount('#app')
