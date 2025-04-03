@@ -1,11 +1,11 @@
 <script>;
-import SignInForm from '@/components/SignInForm.vue';
-import RegistrationForm from '@/components/RegistrationForm.vue'
+// import SignInForm from '@/components/SignInForm.vue';
+// import RegistrationForm from '@/components/RegistrationForm.vue'
 
 export default {
   components: {
-    SignInForm, 
-    RegistrationForm
+    // SignInForm,
+    // RegistrationForm
   },
 
   data() {

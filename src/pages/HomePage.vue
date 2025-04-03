@@ -22,7 +22,6 @@ export default {
   data(){
       return {
         searchTextInput: '',
-        button_size: 's',
         searchQuery: '',
         loading: false
     }
@@ -39,7 +38,9 @@ export default {
   <BaseLayout>
     <div class="search_wrapper d-flex">
       <BaseInput v-model="searchTextInput"/>
-      <BaseButton textButton="Search" :size="button_size" @click="filterPostsByQuery" class="base-button_size--s"/>
+      <BaseButton size="s" @click="filterPostsByQuery" class="base-button_size--s">
+        Search
+      </BaseButton>
     </div>
     <PostList v-if="isMounted && !loading" :searchText="searchQuery"/>
     <div v-else class="spinner-wrapper d-flex d-flex_jcc d-flex_aic">
@@ -56,6 +57,7 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
+  }
 
 .search_wrapper{
   column-gap: 10px;
@@ -75,7 +77,7 @@ export default {
     display: flex;
     width: 100%;
     min-height: 32px;
-    border: 1px solid rgba(0,0,0, .2);
+    border: 1px solid rgba(0, 0, 0, .2);
     border-radius: 8px;
     font-size: 1rem;
     line-height: 1.5;
@@ -84,12 +86,12 @@ export default {
     max-width: 100%;
 
     &::placeholder {
-        color: rgba(0, 0, 0, .26);
+      color: rgba(0, 0, 0, .26);
     }
 
     &:focus-visible {
-        border-color: rgb(253, 211, 42);
-        /* border-color: var(--color-primary); */
+      border-color: rgb(253, 211, 42);
+      /* border-color: var(--color-primary); */
     }
   }
 </style>
