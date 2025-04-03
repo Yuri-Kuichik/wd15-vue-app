@@ -1,5 +1,5 @@
 <template>
-  <button class="base-button" :class="rootClass" @click="$emit(customEvent)">
+  <button class="base-button" :class="rootClass">
     <VueSpinner v-if="loading"/>
     <span v-else>
             {{ textButton }}
@@ -13,10 +13,6 @@ import {computed} from 'vue'
 import VueSpinner from './VueSpinner.vue';
 
 const props = defineProps({
-  customEvent: {
-    type: String,
-    default: 'customEvent'
-  },
   textButton: {
     type: String,
     default: 'Click me'

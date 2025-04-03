@@ -1,18 +1,13 @@
 <script>
 import PostList from '@/components/PostList.vue';
-import BaseInput from "@/components/BaseInput.vue";
-import BaseButton from "@/components/BaseButton.vue";
 
 export default {
   components: {
-    BaseButton,
-    BaseInput,
     PostList,
   },
   data(){
       return {
         searchTextInput: '',
-        buttonName: 'Search',
         button_size: 's',
         searchQuery: '',
     }
@@ -29,7 +24,7 @@ export default {
   <BaseLayout>
     <div class="search_wrapper d-flex">
       <BaseInput v-model="searchTextInput"/>
-      <BaseButton :textButton="buttonName" :size="button_size" @customEvent="filterPostsByQuery" class="base-button_size--s"/>
+      <BaseButton textButton="Search" :size="button_size" @click="filterPostsByQuery" class="base-button_size--s"/>
     </div>
     <PostList :searchText="searchQuery"/>
   </BaseLayout>

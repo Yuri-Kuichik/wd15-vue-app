@@ -8,6 +8,7 @@ import router from './router'
 
 import BaseLayout from './components/BaseLayout.vue';
 import BaseInput from './components/BaseInput.vue';
+import BaseButton from "@/components/BaseButton.vue";
 
 const app = createApp(App)
 
@@ -16,5 +17,6 @@ app.use(router)
 
 app.component('BaseLayout', BaseLayout);
 app.component('BaseInput', BaseInput);
+app.component('BaseButton', BaseButton);
 
 app.mount('#app')
