@@ -1,5 +1,5 @@
 <template>
-  <button class="base-button" :class="rootClass" @click="$emit(customEvent)" :disabled="isDisabled">
+  <button class="base-button" :class="rootClass" :disabled="isDisabled">
     <VueSpinner v-if="loading"/>
     <span v-else>
             <slot></slot>
@@ -24,10 +24,6 @@ const props = defineProps({
     isDisabled: {
         type: Boolean,
         default: false
-    },
-    customEvent: {
-        type: String,
-        default: 'customEvent'
     },
 })
 

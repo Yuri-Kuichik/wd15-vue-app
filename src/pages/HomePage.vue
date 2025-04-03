@@ -22,7 +22,6 @@ export default {
   data(){
       return {
         searchTextInput: '',
-        buttonName: 'Search',
         button_size: 's',
         searchQuery: '',
         loading: false
@@ -40,7 +39,7 @@ export default {
   <BaseLayout>
     <div class="search_wrapper d-flex">
       <BaseInput v-model="searchTextInput"/>
-      <BaseButton :textButton="buttonName" :size="button_size" @customEvent="filterPostsByQuery" class="base-button_size--s"/>
+      <BaseButton textButton="Search" :size="button_size" @click="filterPostsByQuery" class="base-button_size--s"/>
     </div>
     <PostList v-if="isMounted && !loading" :searchText="searchQuery"/>
     <div v-else class="spinner-wrapper d-flex d-flex_jcc d-flex_aic">

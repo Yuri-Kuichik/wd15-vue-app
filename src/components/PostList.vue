@@ -27,15 +27,13 @@ export default {
         this.postListData = data.results
       } catch (error) {
         console.log(error.message)
-      } finally {
-        this.loading = false;
       }
     }
   },
 
   watch: {
-    searchText(newQuery) {
-        this.getPostList(newQuery);
+    searchText(newSearchQuery) {
+        this.getPostList(newSearchQuery);
     }
   },
 
