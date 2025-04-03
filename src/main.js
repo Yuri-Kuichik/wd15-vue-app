@@ -8,13 +8,21 @@ import router from './router'
 
 import BaseLayout from './components/BaseLayout.vue';
 import BaseInput from './components/BaseInput.vue';
+import BaseButton from './components/BaseButton.vue';
+import BaseModal from './components/BaseModal.vue'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
 
-app.component('MyBaseLayout', BaseLayout);
+app.component('BaseLayout', BaseLayout);
 app.component('BaseInput', BaseInput);
+app.component('BaseButton', BaseButton);
+app.component('BaseModal', BaseModal);
+
+app.directive('highlight', {
+  mounted: (el) => el.classList.add('is-highlight')
+})
 
 app.mount('#app')
