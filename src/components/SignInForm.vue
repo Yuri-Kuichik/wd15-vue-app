@@ -28,7 +28,7 @@ export default {
 
   computed: {
     isFormUncompleted() {
-      return this.isFormFullFilled([this.email, this.password]);
+      return this.isFormHasEmptyField([this.email, this.password]);
     }
   }
 

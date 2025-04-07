@@ -32,7 +32,7 @@ export default {
 
   computed: {
     isFormUncompleted() {
-      return this.isFormFullFilled([this.username, this.email, this.password, this.course_group]);
+      return this.isFormHasEmptyField([this.username, this.email, this.password, this.course_group]);
     }
   }
 }

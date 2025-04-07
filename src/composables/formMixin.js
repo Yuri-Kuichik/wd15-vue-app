@@ -8,7 +8,7 @@ export const formMixin = {
             console.log(dataToSend);
         },
 
-        isFormFullFilled(fieldsToCheck) {
+        isFormHasEmptyField(fieldsToCheck) {
             return fieldsToCheck.some(field => !field.length);
         }
     }
