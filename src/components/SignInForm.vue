@@ -9,8 +9,10 @@ export default {
       password: '',
       passwordFieldType: 'password',
       passwordMsgError: '',
+      emailMsgErr: ''
     }
   },
+
   methods: {
     switchPasswordVisibility() {
       this.passwordFieldType = this.switchPasswordType(this.passwordFieldType);

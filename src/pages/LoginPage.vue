@@ -37,7 +37,6 @@ export default {
   </BaseLayout>
 </template>
 
-
 <style lang="scss" scoped>
 .form-wrapper {
   align-items: center;
