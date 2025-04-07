@@ -9,7 +9,7 @@ export const formMixin = {
         },
 
         isFormHasEmptyField(fieldsToCheck) {
-            return fieldsToCheck.some(field => !field.length);
+            return fieldsToCheck.some(field => !field.toString().length);
         }
     }
 };
