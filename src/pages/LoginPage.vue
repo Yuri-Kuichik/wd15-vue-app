@@ -15,8 +15,14 @@ export default {
   },
   methods: {
     toggleForms() {
-      this.currentComponent = this.currentComponent === 'RegistrationForm' ? 'SignInForm' : 'RegistrationForm';
-      this.inactiveComponent = this.currentComponent === 'RegistrationForm' ? 'Go to Sign In Form' : 'Go to Registration Form';
+      this.currentComponent = this.isSignInForm ? 'SignInForm' : 'RegistrationForm';
+      this.inactiveComponent = this.isSignInForm ? 'Go to Sign In Form' : 'Go to Registration Form';
+    }
+  },
+
+  computed: {
+    isSignInForm() {
+      return this.currentComponent === 'RegistrationForm';
     }
   }
 }
