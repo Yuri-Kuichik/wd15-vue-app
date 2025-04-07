@@ -46,9 +46,13 @@ export default {
 
 <template>
   <section>
-    <div v-for="post in postListData" :key="post.id">
-      <PostListItem :model="post"></PostListItem>
-    </div>
-    <div v-if="!postListData.length">Посты не найдены.</div>
+    <template v-if="postListData.length">
+      <div v-for="post in postListData" :key="post.id">
+        <PostListItem :model="post"></PostListItem>
+      </div>
+    </template>
+    <template v-else>
+      <div>Посты не найдены.</div>
+    </template>
   </section>
 </template>
