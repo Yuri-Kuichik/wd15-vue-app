@@ -14,7 +14,7 @@ export default {
 
 <template>
  <div class="main-wrapper">
-  <AppHeader />
+    <AppHeader />
     <main>
       <RouterView />
     </main>
