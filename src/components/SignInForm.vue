@@ -15,17 +15,28 @@ export default {
       this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
     },
 
-    login() {
-      console.log({
+    async login() {
+      const data = {
         email: this.email,
         password: this.password,
+      }
+
+      const res = await fetch('https://studapi.teachmeskills.by/auth/jwt/create/', {
+        method: 'POST',
+        headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+        body: JSON.stringify(data)
       })
-    }
+    },
+
+
   },
 
   computed: {
     isFormCompleted() {
-      return this.email.length && this.password.length;
+      const arr = [this.email, this.password]
+      return arr.every( item => !!item.toString().length )
     }
   }
 }
@@ -42,6 +53,7 @@ export default {
         label="Email"
         placeholder="Input your email"
         :error-message="emailMsgErr"
+        name="email"
       />
       <BaseInput 
         class="sign-in-form__input"
@@ -52,6 +64,7 @@ export default {
         :type="passwordFieldType"
         @switch-type="switchVisibilityPassword"
         :error-message="passwordMsgError"
+        name="password"
       />
 
       <BaseButton 

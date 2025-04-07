@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import HomePage from '../pages/HomePage.vue';
 import LoginPage from '@/pages/LoginPage.vue';
+import PostPage from '@/pages/PostPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +17,11 @@ const router = createRouter({
       name: 'login',
       component: LoginPage,
     },
+    { 
+      path: '/posts/:id',
+      name: 'post', 
+      component: PostPage 
+    },
     {
       path: '/about',
       name: 'about',
@@ -25,6 +31,17 @@ const router = createRouter({
       component: () => import('../pages/HomePage.vue'),
     },
   ],
+})
+
+router.beforeEach( (to, from, next) => {
+  console.log(to)
+
+  const isAuth = true // метод проверки токена в куках
+  if (!isAuth && to.name !== 'login') {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
 })
 
 export default router
