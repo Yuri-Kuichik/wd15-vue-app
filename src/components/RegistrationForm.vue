@@ -1,9 +1,7 @@
 <script>
-import {formMixin} from '@/composables/formMixin.js';
+import {switchPasswordType, sendForm, isFormHasEmptyField} from '@/composables/form.js';
 
 export default {
-
-  mixins: [formMixin],
   data() {
     return {
       username: '',
@@ -11,17 +9,17 @@ export default {
       password: '',
       passwordFieldType: 'password',
       passwordMsgError: '',
-      course_group: '',
+      course_group: 15,
     }
   },
 
   methods: {
     switchPasswordVisibility() {
-      this.passwordFieldType = this.switchPasswordType(this.passwordFieldType);
+      this.passwordFieldType = switchPasswordType(this.passwordFieldType);
     },
 
     send() {
-      this.sendForm({
+      sendForm('https://studapi.teachmeskills.by/auth/users/',{
         username: this.username,
         email: this.email,
         password: this.password,
@@ -33,7 +31,7 @@ export default {
 
   computed: {
     isFormUncompleted() {
-      return this.isFormHasEmptyField([this.username, this.email, this.password, this.course_group]);
+      return isFormHasEmptyField([this.username, this.email, this.password, this.course_group]);
     }
   }
 }
