@@ -3,6 +3,7 @@
         <BaseLayout class="header-section">
             <img class="logo" src="/src/assets/logo.svg" alt="logo Vue">
             <nav class="d-flex">
+                <RouterLink to="/login">Login</RouterLink>
                 <RouterLink to="/">Home</RouterLink>
                 <RouterLink to="/counter">Counter</RouterLink>
                 <RouterLink to="/calculator">Calculator</RouterLink>

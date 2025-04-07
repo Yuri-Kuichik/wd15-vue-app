@@ -53,6 +53,10 @@ const rootClass = computed(() => {
         // background: rgba(253, 211, 42, 0.5);
         opacity: 0.5;
         cursor: not-allowed;
+
+      &:hover {
+        opacity: 0.5;
+      }
     }
 }
 
