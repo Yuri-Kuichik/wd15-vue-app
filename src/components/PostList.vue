@@ -28,6 +28,10 @@ export default {
       } catch (error) {
         console.log(error.message)
       }
+    },
+
+    openPagePost(postId) {
+      this.$router.push({ name: 'post', params: { id: postId } });
     }
   },
 
@@ -48,7 +52,7 @@ export default {
   <section>
     <template v-if="postListData.length">
       <div v-for="post in postListData" :key="post.id">
-        <PostListItem :model="post"></PostListItem>
+        <PostListItem :model="post" @click="openPagePost(post.id)"></PostListItem>
       </div>
     </template>
     <template v-else>
