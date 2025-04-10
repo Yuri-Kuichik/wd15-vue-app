@@ -3,7 +3,9 @@
         <BaseLayout class="header-section">
             <img class="logo" src="/src/assets/logo.svg" alt="logo Vue">
             <nav class="d-flex">
-                <RouterLink to="/">Home</RouterLink>
+              <RouterLink to="/">Home</RouterLink>
+                <RouterLink to="/counter">Counter</RouterLink>
+                <RouterLink to="/calculator">Calculator</RouterLink>
                 <RouterLink to="/about">About</RouterLink>
                 <RouterLink to="/login">Login</RouterLink>
             </nav>
@@ -21,7 +23,11 @@ export default {
 
 <style scoped>
 .app-header {
-    background: var(--color-background-header);
+  background: var(--color-background-header);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .header-section {
@@ -33,12 +39,12 @@ export default {
 .logo {
     width: 30px;
     height: auto;
-    margin-right: 1rem;
+    margin-right: 1.5rem;
 }
 
 nav {
   width: 100%;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
 }
 

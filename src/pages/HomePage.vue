@@ -1,105 +1,183 @@
 <script>
-import PostList from '@/components/PostList.vue';
+import BaseButton from '@/components/BaseButton.vue';
+import BaseInput from '@/components/BaseInput.vue';
 
 export default {
   components: {
-    PostList
+    BaseButton,
+    BaseInput
   },
 
   data() {
     return {
-      postListData: [],
-      limit: 5,
-      search: ''
-    }
-  },
-
-  methods: {
-    // этот метод нужно перенести в компонент PostList.vue
-    async getPostList(search = this.search, limit = this.limit) {
-
-      try {
-        this.loading = true;
-
-        const response = await fetch(`https://studapi.teachmeskills.by/blog/posts?author__course_group=15&limit=${limit}&search'=${search}`)
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json()
-
-          this.postListData = data.results
-      } catch(error) {
-        console.log(error.message)
-      } finally {
-        this.loading = false;
-      }
+      count: 0,
+      
+      operand1: 0,
+      operand2: 0,
+      operator: '+',
+      operators: ['+', '-', '*', '/']
     }
   },
 
   computed: {
+    result() {
+      const a = Number(this.operand1);
+      const b = Number(this.operand2);
+      
+      switch(this.operator) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return b !== 0 ? a / b : 'Ошибка';
+        default: return 0;
+      }
+    },
     
+    activeTab() {
+      return this.$route.path.split('/').pop() || 'home';
+    }
   },
 
-  async created() {
-    await this.getPostList();
+  methods: {
+    increaseCount() {
+      this.count++;
+    },
+
+    decreaseCount() {
+      this.count--;
+    },
+    
+    setOperator(op) {
+      this.operator = op;
+    }
   }
 }
 </script>
 
 <template>
-  <MyBaseLayout>
-    <!-- Здесь можно добавить input (BaseInput) и button (BaseButton) для фильтрации списка по клику на кнопку с текстом 'Search' -->
+  <div class="home-page">
+    <div v-if="activeTab === 'home'" class="welcome-section">
+      <h2>Welcome</h2>
+      <div class="footer">
+        <span>TeachMeSkills</span>
+      </div>
+    </div>
 
-    <!-- здесь компонент PostList -->
-  </MyBaseLayout> 
+    <div v-if="activeTab === 'counter'" class="counter-section">
+      <h2>Counter</h2>
+      <div class="value-display">Value: {{ count }}</div>
+      <div class="buttons-wrapper">
+        <BaseButton 
+          textButton="Increase" 
+          @click="increaseCount" 
+          class="counter-button"
+        />
+        <BaseButton 
+          textButton="Decrease" 
+          @click="decreaseCount" 
+          class="counter-button"
+        />
+      </div>
+    </div>
+
+    <div v-if="activeTab === 'calculator'" class="calculator-section">
+      <h2>Calculator</h2>
+      <div class="inputs-wrapper">
+        <BaseInput 
+          v-model="operand1" 
+          type="number" 
+          placeholder="First operand"
+        />
+        <div class="operators">
+          <BaseButton
+            v-for="op in operators"
+            :key="op"
+            :textButton="op"
+            @click="setOperator(op)"
+            :class="{ 'active': operator === op }"
+            size="s"
+          />
+        </div>
+        <BaseInput 
+          v-model="operand2" 
+          type="number" 
+          placeholder="Second operand"
+        />
+      </div>
+      <div class="result">
+        <h3>Result: {{ result }}</h3>
+      </div>
+    </div>
+  </div>
 </template>
 
+<style scoped>
+.home-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 120px);
+}
 
+.welcome-section, .counter-section, .calculator-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 
-<style lang="scss" scoped>
-  .button {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-    padding: 0 12px;
-    background: rgb(253, 211, 42);
-    color: rgb(7, 7, 7);
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 600;
-    max-width: 100%;
-    width: 100%;
-    height: 48px;
-    max-width: 240px;
+.welcome-section {
+  text-align: center;
+}
 
-    &.disabled {
-      cursor: cell;
-      background: rgba(253, 211, 42, 0.5);
-    }
-  }
+.value-display {
+  font-size: 24px;
+  margin: 1.5rem 0;
+  font-weight: bold;
+  color: #333;
+}
 
-  .input {
-    padding: 8px 12px;
-    width: 100%;
-    min-height: 32px;
-    border: 1px solid rgba(0,0,0, .2);
-    border-radius: 8px;
-    font-size: 1rem;
-    line-height: 1.5;
-    cursor: pointer;
-    background: var(--color-white) !important;
-    margin-bottom: 12px;
-    max-width: 240px;
+.buttons-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
 
-    &::placeholder {
-        color: rgba(0, 0, 0, .26);
-    }
+.counter-button {
+  min-width: 120px;
+}
 
-    &:focus-visible {
-        border-color: rgb(253, 211, 42);
-        /* border-color: var(--color-primary); */
-    }
-  }
+.inputs-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.operators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.result {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  color: #666;
+  text-align: center;
+}
 </style>
