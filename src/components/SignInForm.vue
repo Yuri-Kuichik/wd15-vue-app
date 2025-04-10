@@ -1,12 +1,20 @@
 <script>
+import { useAuthStore } from '@/stores/auth'
+
 export default {
+  setup() {
+    const authStore = useAuthStore();
+
+    return { authStore }
+  },
+
   data() {
     return {
       email: '',
       password: '',
       passwordFieldType: 'password',
       passwordMsgError: '',
-      emailMsgErr: ''
+      emailMsgErr: '',
     }
   },
 
@@ -15,17 +23,20 @@ export default {
       this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
     },
 
-    login() {
-      console.log({
+    async login() {
+      const data = {
         email: this.email,
         password: this.password,
-      })
+      }
+
+      this.authStore.signIn(data);
     }
   },
 
   computed: {
     isFormCompleted() {
-      return this.email.length && this.password.length;
+      const arr = [this.email, this.password]
+      return arr.every( item => !!item.toString().length )
     }
   }
 }
@@ -34,6 +45,7 @@ export default {
 
 <template>
   <div class="sign-in-form-wrapper">
+    <span class="sign-in-form__toggle" @click="$emit('toggle')">registration</span>
     <form class="sign-in-form">
       <h2>Sign In</h2>
       <BaseInput 
@@ -42,6 +54,7 @@ export default {
         label="Email"
         placeholder="Input your email"
         :error-message="emailMsgErr"
+        name="email"
       />
       <BaseInput 
         class="sign-in-form__input"
@@ -52,6 +65,7 @@ export default {
         :type="passwordFieldType"
         @switch-type="switchVisibilityPassword"
         :error-message="passwordMsgError"
+        name="password"
       />
 
       <BaseButton 
@@ -61,8 +75,6 @@ export default {
       >
         <span>Send</span>
       </BaseButton>
-
-      <span class="sign-in-form__toggle" @click="$emit('toggle')">registration</span>
     </form>
   </div>
 </template>

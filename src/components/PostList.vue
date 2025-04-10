@@ -45,8 +45,10 @@ export default {
       // }
     },
 
-    openPagePost(id) {
-      console.log('post id: ', id)
+    openPagePost(poistId) {
+      console.log('post id: ', poistId)
+
+      this.$router.push({name: 'post', params: {id: poistId} })
     }
   },
 

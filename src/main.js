@@ -2,6 +2,7 @@ import './assets/styles/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { markRaw } from 'vue'
 
 import App from './App.vue'
 import router from './router'
@@ -12,9 +13,12 @@ import BaseButton from './components/BaseButton.vue';
 import BaseModal from './components/BaseModal.vue'
 
 const app = createApp(App)
-
-app.use(createPinia())
+const pinia = createPinia()
+app.use(pinia)
 app.use(router)
+pinia.use(({ store }) => {
+  store.router = markRaw(router);
+});
 
 app.component('BaseLayout', BaseLayout);
 app.component('BaseInput', BaseInput);
