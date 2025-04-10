@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth';
 
 import HomePage from '../pages/HomePage.vue';
 import LoginPage from '@/pages/LoginPage.vue';
@@ -34,10 +35,10 @@ const router = createRouter({
 })
 
 router.beforeEach( (to, from, next) => {
+  const authStore = useAuthStore()
   console.log(to)
 
-  const isAuth = true // метод проверки токена в куках
-  if (!isAuth && to.name !== 'login') {
+  if (!authStore.isAuth() && to.name !== 'login') {
     next({ name: 'login' })
   } else {
     next()

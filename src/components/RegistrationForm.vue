@@ -1,6 +1,12 @@
 <script>
+import { useAuthStore } from '@/stores/auth'
 
 export default {
+  setup() {
+    const authStore = useAuthStore()
+
+    return { authStore }
+  },
 
   data() {
     return {
@@ -10,7 +16,9 @@ export default {
       courseGroupId: 15,
       emailMsgErr: '',
       passwordMsgError: '',
-      passwordFieldType: 'password'
+      passwordFieldType: 'password',
+      isShowActivateForm: false,
+      activateUrl: ''
     }
   },
 
@@ -28,14 +36,31 @@ export default {
         course_group: this.courseGroupId
       }
 
-      await fetch('https://studapi.teachmeskills.by/auth/users/', {
-        method: 'POST',
-        headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-        body: JSON.stringify(data)
-      })
-      
+      this.authStore.createUser(data);
+    },
+
+    // после регистрации и того, как пришло письмо с url на почту, и вы сохранили этот url здесь в state -> url, 
+    // отправляем полученные данные на сервер для активации профиля
+    async activateUser() {
+      const data = this.getDataUserFromUrl();
+
+      this.authStore.activateUser(data)
+    },
+
+    // этот метод для получения нашего uid и token в формате объекта из строки url
+    // этот url вам должет придти на почту после регистрации. 
+    // Пример: 'https://studapi.teachmeskills.by//activate/ODYwNw/ccdl27-bd7b740f22b991613865d1d739d5abba'
+    getDataUserFromUrl() {
+      const str = this.activateUrl.split('activate/')[1]
+
+      const uid = str.split('/')[0]
+      const token = str.split('/')[1]
+
+      return {uid, token}
+    },
+
+    showActivateForm() {
+      this.isShowActivateForm = true;
     }
   },
 
@@ -51,8 +76,9 @@ export default {
 </script>
 
 <template>
-  <div class="registration-form-wrapper">
-    <form class="registration-form">
+  <div class="form-wrapper">
+    <span class="registration-form__toggle" @click="$emit('toggle')">sign in</span>
+    <form v-if="!isShowActivateForm" class="registration-form">
       <h2>Registration</h2>
       <BaseInput 
         class="registration-form__input" 
@@ -99,14 +125,40 @@ export default {
         <span>Send</span>
       </BaseButton>
 
-      <span class="registration-form__toggle" @click="$emit('toggle')">sign in</span>
+      <p>
+        After successful registration click <b>Activate</b> button 
+        to complete registration and activate the profile
+      </p>
+      <BaseButton 
+        class="registration-form__button"
+        @click="showActivateForm" 
+      >
+        <span>Activate</span>
+      </BaseButton>
+    </form>
 
+    <form v-else class="activate-form">
+      <h2>Activate</h2>
+      <BaseInput 
+        class="activate-form__input" 
+        label="Url"
+        v-model="activateUrl"
+        placeholder="Insert a link from email"
+        name="activateUrl"
+      />
+
+      <BaseButton 
+        class="activate-form__button"
+        @click.prevent="activateUser" 
+      >
+        <span>Send</span>
+      </BaseButton>
     </form>
   </div>
 </template>
 
 <style lang="scss" scoped>
-  .registration-form-wrapper {
+  .form-wrapper {
     padding: 2rem;
     margin: 0 auto;
     max-width: 480px;
@@ -114,7 +166,8 @@ export default {
     border-radius: 8px;
   }
 
-  .registration-form {
+  .registration-form,
+  .activate-form {
     padding-top: 1rem;
 
     h2 {

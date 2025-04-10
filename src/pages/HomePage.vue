@@ -1,5 +1,6 @@
 <script>
 import { useMounted } from '@/composables/useMounted';
+import { store } from '@/stores/store';
 
 import PostList from '@/components/PostList.vue';
 import VueSpinner from '@/components/VueSpinner.vue';
@@ -18,7 +19,8 @@ export default {
 
   data() {
     return {
-      loading: false
+      loading: false,
+      store
     }
   },
 
@@ -28,10 +30,6 @@ export default {
 
   computed: {
     
-  },
-
-  async created() {
-   
   }
 }
 </script>
