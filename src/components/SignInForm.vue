@@ -1,8 +1,7 @@
 <script>
-import { formMixin } from '@/composables/formMixin.js';
+import {switchPasswordType, sendForm, isFormHasEmptyField} from '@/composables/form.js';
 
 export default {
-  mixins: [formMixin],
   data() {
     return {
       email: '',
@@ -15,11 +14,11 @@ export default {
 
   methods: {
     switchPasswordVisibility() {
-      this.passwordFieldType = this.switchPasswordType(this.passwordFieldType);
+      this.passwordFieldType = switchPasswordType(this.passwordFieldType);
     },
 
     send() {
-      this.sendForm({
+      sendForm('https://studapi.teachmeskills.by/auth/jwt/create',{
             email: this.email,
             password: this.password,
           }
@@ -30,7 +29,7 @@ export default {
 
   computed: {
     isFormUncompleted() {
-      return this.isFormHasEmptyField([this.email, this.password]);
+      return isFormHasEmptyField([this.email, this.password]);
     }
   }
 
