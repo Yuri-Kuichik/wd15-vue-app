@@ -18,15 +18,18 @@ export default {
   data() {
     return {
       postListData: [],
-      postsLimit: 5,
+      postsLimit: 4,
       searchString: '',
+      courseGroupId: 15
     }
   },
 
   methods: {
-    async getPostList() {
-      const url = `https://studapi.teachmeskills.by/blog/posts?author__course_group=15&limit=${this.postsLimit}&search=${this.searchString}`
-      this.fetchData(url)
+    async getPostList(url) {
+      const pamarsStr = this.getPostListParams(url)
+      const urlDefault = `https://studapi.teachmeskills.by/blog/posts${pamarsStr}`
+
+      this.fetchData(urlDefault)
 
       // try {
       //   this.loading = true;
@@ -45,16 +48,58 @@ export default {
       // }
     },
 
+    getPostListParams(url) {
+      if (url) { 
+        return `?${url?.split('?')[1]}`;
+      }
+
+      const paramsData = {
+        search: this.searchString, 
+        limit: this.postsLimit, 
+        author__course_group: this.courseGroupId
+      }
+      let str = ''
+      let arr = Object.keys(paramsData).reduce((acc, param) => {
+          return paramsData[param] ? [...acc, `${param}=${paramsData[param]}`] : acc
+      }, [])
+  
+      if (arr.length) {
+          str = '?' + arr.join('&')
+      }
+
+      return str
+    },
+
     openPagePost(poistId) {
       console.log('post id: ', poistId)
 
       this.$router.push({name: 'post', params: {id: poistId} })
+    },
+
+    goToNext() {
+      this.getPostList(this.data.next)
+    },
+
+    goToPrev() {
+      this.getPostList(this.data.previous)
+    },
+
+    searchPosts() {
+      this.getPostList();
     }
   },
 
   computed: {
     postList() {
       return this.data?.results
+    },
+
+    nextPageUrl() {
+      return this.data?.next
+    },
+
+    prevPageUrl() {
+      return this.data?.previous
     }
   },
 
@@ -67,13 +112,24 @@ export default {
 
 <template>
   <section class="post-list">
+    <div class="pagination-wrapper">
+      <BaseButton v-show="prevPageUrl" size="s" class="pagination-button" @click="goToPrev">
+        Prev
+      </BaseButton>
+      <div class="d-flex"></div>
+      <BaseButton v-show="nextPageUrl" size="s" class="pagination-button" @click="goToNext">
+        Next
+      </BaseButton>
+
+    </div>
+
     <div class="post-list__search-wrapper">
       <BaseInput 
         class="post-list__search-input" 
         placeholder="Input post text"
         v-model="searchString"
       />
-      <BaseButton class="post-list__search-button" @click="getPostList">
+      <BaseButton class="post-list__search-button" @click="searchPosts">
         Search
       </BaseButton>
     </div>
@@ -112,6 +168,16 @@ export default {
   .limit {
     margin-right: 12px; 
     cursor: pointer;
+  }
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .pagination-button {
+    max-width: 150px;
   }
 }
 

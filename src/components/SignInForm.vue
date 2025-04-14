@@ -72,6 +72,7 @@ export default {
         class="sign-in-form__button"
         @click.prevent="login" 
         :is-disabled="!isFormCompleted" 
+        :loading="authStore.loading"
       >
         <span>Send</span>
       </BaseButton>

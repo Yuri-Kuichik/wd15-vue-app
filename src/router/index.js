@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth';
 import HomePage from '../pages/HomePage.vue';
 import LoginPage from '@/pages/LoginPage.vue';
 import PostPage from '@/pages/PostPage.vue';
+import UserPage from '@/pages/UserPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +25,11 @@ const router = createRouter({
       component: PostPage 
     },
     {
+      path: '/user',
+      name: 'user',
+      component: UserPage
+    },
+    {
       path: '/counter',
       name: 'counter',
       // добавьте CounterPage.vue
@@ -35,12 +41,14 @@ const router = createRouter({
       // добавьте CalculatorPage.vue
       component: () => import('../pages/HomePage.vue'),
     },
+
   ],
 })
 
 router.beforeEach( (to, from, next) => {
   const authStore = useAuthStore()
   console.log(to)
+  console.log('isAuth: ', authStore.isAuth())
 
   if (!authStore.isAuth() && to.name !== 'login') {
     next({ name: 'login' })

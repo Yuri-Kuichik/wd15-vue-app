@@ -2,21 +2,54 @@
     <div class="app-header">
         <BaseLayout class="header-section">
             <img class="logo" src="/src/assets/logo.svg" alt="logo Vue">
-            <nav class="d-flex">
+            <template v-if="is_auth">
+              <nav class="d-flex">
                 <RouterLink to="/">Home</RouterLink>
                 <RouterLink to="/counter">Counter</RouterLink>
                 <RouterLink to="/calculator">Calculator</RouterLink>
-                <RouterLink to="/login">Login</RouterLink>
-            </nav>
+                <RouterLink to="/user">User</RouterLink>
+              </nav>
+              <div class="btn-sign-out" @click="signOut"><b>Sign out</b></div>
+            </template>
         </BaseLayout>
     </div>
 </template>
 
 <script>
 import BaseLayout from './BaseLayout.vue';
+import { useAuthStore } from '@/stores/auth';
 
 export default {
-    components: { BaseLayout }
+  setup() {
+    const useAuth = useAuthStore();
+
+    return { useAuth }
+  },
+
+  components: { BaseLayout },
+
+  data() {
+    return{
+      is_auth: false
+    }
+  },
+
+  methods: {
+    signOut() {
+      this.useAuth.signOut();
+
+      this.$router.push('/login')
+    }
+  },
+
+  watch: {
+    useAuth: {
+      handler(state) {
+        this.is_auth = state.isAuth()
+      },
+      deep: true
+    }
+  }
 }
 </script>
 
@@ -59,6 +92,10 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
+}
+
+.btn-sign-out {
+  cursor: pointer;
 }
 
 @media (min-width: 1024px) {

@@ -121,6 +121,7 @@ export default {
         class="registration-form__button"
         @click.prevent="createUser" 
         :is-disabled="!isFormCompleted" 
+        :loading="authStore.loading"
       >
         <span>Send</span>
       </BaseButton>
@@ -150,6 +151,7 @@ export default {
       <BaseButton 
         class="activate-form__button"
         @click.prevent="activateUser" 
+        :loading="authStore.loading"
       >
         <span>Send</span>
       </BaseButton>
