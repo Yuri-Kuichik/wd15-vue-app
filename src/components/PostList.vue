@@ -1,6 +1,7 @@
 <script>
 import { useFetch } from '@/composables/useFetch';
 import PostListItem from '@/components/PostListItem.vue'
+import { usePostsStore } from '@/stores/posts';
 
 export default {
   components: {
@@ -8,66 +9,22 @@ export default {
   },
 
   setup() {
-    const { data, error, loading, fetchData } = useFetch();
+    const postsStore = usePostsStore();
 
     return {
-      data, error, loading, fetchData
+     postsStore
     }
   },
 
   data() {
     return {
-      postListData: [],
-      postsLimit: 4,
-      searchString: '',
-      courseGroupId: 15
+     
     }
   },
 
   methods: {
     async getPostList(url) {
-      const pamarsStr = this.getPostListParams(url)
-      const urlDefault = `https://studapi.teachmeskills.by/blog/posts${pamarsStr}`
-
-      this.fetchData(urlDefault)
-
-      // try {
-      //   this.loading = true;
-
-      //   const response = await fetch(url)
-      //     if (!response.ok) {
-      //       throw new Error(`HTTP error! status: ${response.status}`);
-      //     }
-      //     const data = await response.json()
-
-      //     this.postListData = data.results
-      // } catch(error) {
-      //   console.log(error.message)
-      // } finally {
-      //   this.loading = false;
-      // }
-    },
-
-    getPostListParams(url) {
-      if (url) { 
-        return `?${url?.split('?')[1]}`;
-      }
-
-      const paramsData = {
-        search: this.searchString, 
-        limit: this.postsLimit, 
-        author__course_group: this.courseGroupId
-      }
-      let str = ''
-      let arr = Object.keys(paramsData).reduce((acc, param) => {
-          return paramsData[param] ? [...acc, `${param}=${paramsData[param]}`] : acc
-      }, [])
-  
-      if (arr.length) {
-          str = '?' + arr.join('&')
-      }
-
-      return str
+      await this.postsStore.getPostList(url);
     },
 
     openPagePost(poistId) {
@@ -77,11 +34,11 @@ export default {
     },
 
     goToNext() {
-      this.getPostList(this.data.next)
+      this.getPostList(this.postsStore.postListData.next)
     },
 
     goToPrev() {
-      this.getPostList(this.data.previous)
+      this.getPostList(this.postsStore.postListData.previous)
     },
 
     searchPosts() {
@@ -91,15 +48,15 @@ export default {
 
   computed: {
     postList() {
-      return this.data?.results
+      return this.postsStore.postListData?.results
     },
 
     nextPageUrl() {
-      return this.data?.next
+      return this.postsStore.postListData?.next
     },
 
     prevPageUrl() {
-      return this.data?.previous
+      return this.postsStore.postListData?.previous
     }
   },
 
@@ -120,14 +77,13 @@ export default {
       <BaseButton v-show="nextPageUrl" size="s" class="pagination-button" @click="goToNext">
         Next
       </BaseButton>
-
     </div>
 
     <div class="post-list__search-wrapper">
       <BaseInput 
         class="post-list__search-input" 
         placeholder="Input post text"
-        v-model="searchString"
+        v-model="postsStore.searchString"
       />
       <BaseButton class="post-list__search-button" @click="searchPosts">
         Search
@@ -138,7 +94,6 @@ export default {
       <PostListItem :model="post" @click="openPagePost(post.id)"/>
     </div>
   </section>
-
 </template>
 
 

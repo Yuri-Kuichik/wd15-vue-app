@@ -5,6 +5,8 @@ import HomePage from '../pages/HomePage.vue';
 import LoginPage from '@/pages/LoginPage.vue';
 import PostPage from '@/pages/PostPage.vue';
 import UserPage from '@/pages/UserPage.vue';
+import CounterPage from '@/pages/CounterPage.vue';
+import CalculatorPage from '@/pages/CalculatorPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,14 +34,12 @@ const router = createRouter({
     {
       path: '/counter',
       name: 'counter',
-      // добавьте CounterPage.vue
-      component: () => import('../pages/HomePage.vue'),
+      component: CounterPage
     },
     {
       path: '/calculator',
       name: 'calculator',
-      // добавьте CalculatorPage.vue
-      component: () => import('../pages/HomePage.vue'),
+      component: CalculatorPage
     },
 
   ],

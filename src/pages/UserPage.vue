@@ -11,6 +11,7 @@ export default {
   data() {
     return {
       isShowForm: false,
+      isShowModal: false,
       newEmail: '',
       password: ''
     }
@@ -18,11 +19,25 @@ export default {
 
   methods: {
     openFormNewEmail() {
+      this.closeConfirmModalWindow();
       this.isShowForm = true;
     },
 
+    closeFormNewEmail() {
+      this.isShowForm = false;
+    },
+
     changeEmail() {
-      this.authStore.setNewEmail(this.password, this.newEmail)
+      this.authStore.setNewEmail(this.password, this.newEmail);
+      this.closeFormNewEmail();
+    },
+
+    openConfirmModalWindow() {
+      this.isShowModal = true;
+    },
+
+    closeConfirmModalWindow() {
+      this.isShowModal = false;
     }
   }
 }
@@ -32,9 +47,23 @@ export default {
   <BaseLayout class="login-page">
     <h1>User page</h1>
 
-    <BaseButton @click="openFormNewEmail">
+    <BaseButton @click="openConfirmModalWindow">
       <span>Change email</span>
     </BaseButton>
+
+    <BaseModal v-show="isShowModal">
+      <template #header>Вы действительно хотите изменить email?</template>
+      <template #action>
+        <div class="d-flex">
+          <BaseButton @click="openFormNewEmail" class="first-btn">
+            <span>Да</span>
+          </BaseButton>
+          <BaseButton @click="closeConfirmModalWindow">
+            <span>Нет</span>
+          </BaseButton>
+        </div> 
+      </template>
+    </BaseModal>
 
     <form v-if="isShowForm" class="sign-in-form">
       <h2>Sign In</h2>
@@ -64,3 +93,9 @@ export default {
 
   </BaseLayout>
 </template>
+
+<style scoped>
+  .first-btn {
+    margin-right: 12px;
+  }
+</style>

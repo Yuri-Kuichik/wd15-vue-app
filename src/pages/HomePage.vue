@@ -1,42 +1,20 @@
-<script>
+<script setup>
+import { onMounted } from 'vue';
 import { useMounted } from '@/composables/useMounted';
-import { store } from '@/stores/store';
 
 import PostList from '@/components/PostList.vue';
 import VueSpinner from '@/components/VueSpinner.vue';
 
-export default {
-  components: {
-    PostList,
-    VueSpinner
-  },
+const { isMounted } = useMounted();
 
-  setup() {
-    const { isMounted } = useMounted();
-
-    return { isMounted }
-  },
-
-  data() {
-    return {
-      loading: false,
-      store
-    }
-  },
-
-  methods: {
-    
-  },
-
-  computed: {
-    
-  }
-}
+onMounted(() => {
+  console.log('Dom is ready')
+}) 
 </script>
 
 <template>
   <BaseLayout>
-    <PostList v-if="isMounted && !loading" />
+    <PostList v-if="isMounted" />
     <div v-else class="spinner-wrapper d-flex d-flex_jcc d-flex_aic">
       <VueSpinner size="l"/>
     </div>

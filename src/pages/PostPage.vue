@@ -1,24 +1,15 @@
 <script>
-export default {
-  data() {
-    return {
-      postData: null
-    }
-  },
+import { usePostsStore } from '@/stores/posts';
 
-  methods: {
-    async getPost(id) {
-      await fetch(`https://studapi.teachmeskills.by/blog/posts/${id}`)
-        .then(response => response.json())
-        .then(json => this.postData = json );
-    }
+export default {
+  setup() {
+    const postsStore = usePostsStore();
+
+    return { postsStore }
   },
 
   async created() {
-    console.log('router: ', this.$router)
-    console.log('route: ', this.$route)
-
-    await this.getPost(this.$route.params.id)
+    await this.postsStore.getPost(this.$route.params.id)
   },
 }
 </script>
@@ -28,13 +19,13 @@ export default {
 <template>
   <BaseLayout>
     <div>
-      <h1>{{ postData?.title }}</h1>
+      <h1>{{ postsStore.postData?.title }}</h1>
       <div class="image-wrapper">
-        <img :src="postData?.image" alt="post image">
+        <img :src="postsStore.postData?.image" alt="post image">
       </div>
       
-      <p>{{ postData?.text }}</p>
-      <span>{{ postData?.date }}</span>
+      <p>{{ postsStore.postData?.text }}</p>
+      <span>{{ postsStore.postData?.date }}</span>
     </div>
   </BaseLayout>
 </template>
