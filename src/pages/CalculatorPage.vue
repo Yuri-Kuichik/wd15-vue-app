@@ -1,127 +1,99 @@
-<script>
-import BaseLayout from '@/components/BaseLayout.vue';
+<script setup>
+import { ref, computed } from 'vue';
+import { usePostsStore } from '@/stores/posts';
+import { useRoute, useRouter } from 'vue-router'
 
-export default {
-  components: {
-    BaseLayout
-  },
+const postsStore = usePostsStore();
+const route = useRoute();
+const router = useRouter();
 
-  data() {
-    return {
-      operator: "",
-      operand1: 0,
-      operand2: 0,
-    }
-  },
-  computed: {
-    result() {
-      if (!Number.isFinite(this.operand1) || !Number.isFinite(this.operand2))
-      {
-        return "Expected two numbers.";
-      }
+console.log(route)
+console.log(router)
 
-      switch (this.operator) {
-        case '+':
-          return this.operand1 + this.operand2;
-        case '-':
-          return this.operand1 - this.operand2;
-        case '*':
-          return this.operand1 * this.operand2;
-        case '/':
-          return this.operand2 !== 0 ? (this.operand1 / this.operand2) : "Avoid dividing by zero";
-        case '':
-          return "Enter values and select an operation";
-        default:
-          return 0;
-      }
-    },
+
+const valueFirst = ref(0),
+      valueSecond = ref(0),
+      result = ref(0),
+      operator = ref('+');
+
+function getResult() {
+  switch(operator.value) {
+    case '+': 
+    result.value = valueFirst.value + valueSecond.value
+
+    case '-': 
+    result.value = valueFirst.value - valueSecond.value
+
+    case '/': 
+    result.value = valueFirst.value / valueSecond.value
+
+    case '*': 
+    result.value = valueFirst.value * valueSecond.value
   }
 }
+
+function isActiveCurrentButton(value) {
+  return operator.value === value
+}
+
+function changeOperator(value) {
+  operator.value = value;
+  router.push('/')
+}
+
+function getPostList() {
+  postsStore.getPostList()
+}
+
+const newResult = computed(() => {
+  switch(operator.value) {
+    case '+': 
+    return valueFirst.value + valueSecond.value
+
+    case '-': 
+    return valueFirst.value - valueSecond.value
+
+    case '/': 
+    return valueFirst.value / valueSecond.value
+
+    case '*': 
+    return valueFirst.value * valueSecond.value
+  }
+})
+
+getPostList()
 
 </script>
 
 <template>
-  <BaseLayout>
-    <section class="calculator-section">
-      <div class="calculator-wrapper">
-        <h2 class="calculator-title">Calculator</h2>
-        <input type="number" required v-model.number="operand1">
-        <input type="number" required v-model.number="operand2">
-        <div class="calculator-buttons-wrapper">
-          <button class="calculator-button" @click="operator = '+'"> +</button>
-          <button class="calculator-button" @click="operator = '-'"> -</button>
-          <button class="calculator-button" @click="operator = '*'"> *</button>
-          <button class="calculator-button" @click="operator = '/'"> /</button>
-        </div>
-        <span class="calculator-text">Result: {{ result }}</span>
+  <BaseLayout class="calculator-page">
+    <h1>Calculator page</h1>
+    <input type="number" v-model.number="valueFirst"/>
+    <input type="number" v-model.number="valueSecond"/>
+    
+    <BaseButton class="btn" :class="{active: isActiveCurrentButton('+')}" @click="changeOperator('+')">+</BaseButton>
+    <BaseButton class="btn" :class="{active: isActiveCurrentButton('-')}" @click="changeOperator('-')">-</BaseButton>
+    <BaseButton class="btn" :class="{active: isActiveCurrentButton('/')}" @click="changeOperator('/')">/</BaseButton>
+    <BaseButton class="btn" :class="{active: isActiveCurrentButton('*')}" @click="changeOperator('*')">*</BaseButton>
 
-      </div>
-    </section>
+    <!-- <BaseButton class="btn" @click="getResult">result: {{ result }}</BaseButton> -->
+     <div>Result: {{ newResult }}</div>
   </BaseLayout>
+
 </template>
 
-
 <style lang="scss" scoped>
-.calculator-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+.calculator-page {
+  .btn {
+    width: 200px;
+    max-width: 200px;
+    margin-top: 20px;
 
-.calculator-wrapper {
-  margin: auto;
-  max-width: 250px;
-  text-align: center;
-}
-
-.calculator-buttons-wrapper {
-  display: flex;
-  column-gap: 25px;
-  padding: 20px;
-}
-
-button {
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 0 12px;
-  background: rgb(253, 211, 42);
-  color: rgb(7, 7, 7);
-  border-radius: 8px;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-  width: 100%;
-  height: 48px;
-  min-height: 48px;
-  max-width: 240px;
-
-  &.disabled {
-    cursor: cell;
-    background: rgba(253, 211, 42, 0.5);
+    &.active {
+      border-color: red;
+    }
   }
 }
 
-input {
-  padding: 8px 12px;
-  width: 100%;
-  min-height: 32px;
-  border: 1px solid var(--color-input);
-  border-radius: 8px;
-  font-size: 1rem;
-  line-height: 1.5;
-  cursor: pointer;
-  background: var(--color-white) !important;
-  margin-bottom: 12px;
-  max-width: 240px;
 
-  &::placeholder {
-    color: rgba(0, 0, 0, .26);
-  }
-
-  &:focus-visible {
-    border: 3px solid rgb(253, 211, 42);
-  }
-}
 </style>

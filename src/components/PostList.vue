@@ -1,43 +1,62 @@
 <script>
-import PostListItem from "@/components/PostListItem.vue";
+import { useFetch } from '@/composables/useFetch';
+import PostListItem from '@/components/PostListItem.vue'
+import { usePostsStore } from '@/stores/posts';
 
 export default {
   components: {
-    PostListItem,
+    PostListItem
   },
-  props: [`searchText`],
+
+  setup() {
+    const postsStore = usePostsStore();
+
+    return {
+     postsStore
+    }
+  },
+
   data() {
     return {
-      postListData: [],
-      limit: 5,
+     
     }
   },
 
   methods: {
-    async getPostList(search = this.searchText, limit = this.limit) {
-      try {
-        this.loading = true;
-
-        const response = await fetch(`https://studapi.teachmeskills.by/blog/posts?author__course_group=15&limit=${limit}&search=${search}`)
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json()
-
-        this.postListData = data.results
-      } catch (error) {
-        console.log(error.message)
-      }
+    async getPostList(url) {
+      await this.postsStore.getPostList(url);
     },
 
-    openPagePost(postId) {
-      this.$router.push({ name: 'post', params: { id: postId } });
+    openPagePost(poistId) {
+      console.log('post id: ', poistId)
+
+      this.$router.push({name: 'post', params: {id: poistId} })
+    },
+
+    goToNext() {
+      this.getPostList(this.postsStore.postListData.next)
+    },
+
+    goToPrev() {
+      this.getPostList(this.postsStore.postListData.previous)
+    },
+
+    searchPosts() {
+      this.getPostList();
     }
   },
 
-  watch: {
-    searchText(newSearchQuery) {
-        this.getPostList(newSearchQuery);
+  computed: {
+    postList() {
+      return this.postsStore.postListData?.results
+    },
+
+    nextPageUrl() {
+      return this.postsStore.postListData?.next
+    },
+
+    prevPageUrl() {
+      return this.postsStore.postListData?.previous
     }
   },
 
@@ -49,14 +68,72 @@ export default {
 </script>
 
 <template>
-  <section>
-    <template v-if="postListData.length">
-      <div v-for="post in postListData" :key="post.id">
-        <PostListItem :model="post" @click="openPagePost(post.id)"></PostListItem>
-      </div>
-    </template>
-    <template v-else>
-      <div>Посты не найдены.</div>
-    </template>
+  <section class="post-list">
+    <div class="pagination-wrapper">
+      <BaseButton v-show="prevPageUrl" size="s" class="pagination-button" @click="goToPrev">
+        Prev
+      </BaseButton>
+      <div class="d-flex"></div>
+      <BaseButton v-show="nextPageUrl" size="s" class="pagination-button" @click="goToNext">
+        Next
+      </BaseButton>
+    </div>
+
+    <div class="post-list__search-wrapper">
+      <BaseInput 
+        class="post-list__search-input" 
+        placeholder="Input post text"
+        v-model="postsStore.searchString"
+      />
+      <BaseButton class="post-list__search-button" @click="searchPosts">
+        Search
+      </BaseButton>
+    </div>
+
+    <div v-for="post in postList" :key='post.id'>
+      <PostListItem :model="post" @click="openPagePost(post.id)"/>
+    </div>
   </section>
 </template>
+
+
+<style lang="scss" scoped>
+.post-list {
+  padding: 32px 16px; 
+  background-color: rgba(0,0,0, .03);
+  border-radius: 8px; 
+
+  &__search-input {
+    padding-bottom: 20px;
+  }
+
+  &__search-wrapper {
+    display: flex; 
+    gap: 12px;
+
+    .post-list__search-input {
+      flex-grow: 1;
+    }
+
+    .post-list__search-button {
+      max-width: 200px;
+    }
+  }
+
+  .limit {
+    margin-right: 12px; 
+    cursor: pointer;
+  }
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .pagination-button {
+    max-width: 150px;
+  }
+}
+
+</style>

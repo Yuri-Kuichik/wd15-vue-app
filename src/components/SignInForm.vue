@@ -1,89 +1,115 @@
 <script>
-import {switchPasswordType, sendForm, isFormHasEmptyField} from '@/composables/form.js';
+import { useAuthStore } from '@/stores/auth'
 
 export default {
+  setup() {
+    const authStore = useAuthStore();
+
+    return { authStore }
+  },
+
   data() {
     return {
       email: '',
       password: '',
       passwordFieldType: 'password',
       passwordMsgError: '',
-      emailMsgErr: ''
+      emailMsgErr: '',
     }
   },
 
   methods: {
-    switchPasswordVisibility() {
-      this.passwordFieldType = switchPasswordType(this.passwordFieldType);
+    switchVisibilityPassword() {
+      this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
     },
 
-    send() {
-      sendForm('https://studapi.teachmeskills.by/auth/jwt/create',{
-            email: this.email,
-            password: this.password,
-          }
-      )
-    },
+    async login() {
+      const data = {
+        email: this.email,
+        password: this.password,
+      }
 
+      this.authStore.signIn(data);
+    }
   },
 
   computed: {
-    isFormUncompleted() {
-      return isFormHasEmptyField([this.email, this.password]);
+    isFormCompleted() {
+      const arr = [this.email, this.password]
+      return arr.every( item => !!item.toString().length )
     }
   }
-
 }
+
 </script>
 
 <template>
-  <div class="sign-in-form-wrapper d-flex d-flex_jcc">
+  <div class="sign-in-form-wrapper">
+    <span class="sign-in-form__toggle" @click="$emit('toggle')">registration</span>
     <form class="sign-in-form">
-      <h2 class="sign-in-form__header">Sign In</h2>
-      <BaseInput
-          label="Email"
-          v-model="email"
-          type="email"
+      <h2>Sign In</h2>
+      <BaseInput 
+        class="sign-in-form__input"
+        v-model="email"
+        label="Email"
+        placeholder="Input your email"
+        :error-message="emailMsgErr"
+        name="email"
       />
-      <BaseInput
-          label="Password"
-          :type="passwordFieldType"
-          password-field
-          v-model="password"
-          @switch-type="switchPasswordVisibility"
+      <BaseInput 
+        class="sign-in-form__input"
+        v-model="password"
+        label="Password"
+        placeholder="Input your passowrd"
+        password-field
+        :type="passwordFieldType"
+        @switch-type="switchVisibilityPassword"
+        :error-message="passwordMsgError"
+        name="password"
       />
-      <BaseButton
-          @click.prevent="send"
-          :is-disabled="isFormUncompleted"
+
+      <BaseButton 
+        class="sign-in-form__button"
+        @click.prevent="login" 
+        :is-disabled="!isFormCompleted" 
+        :loading="authStore.loading"
       >
-        <span>Sign in</span>
+        <span>Send</span>
       </BaseButton>
     </form>
-
   </div>
 </template>
 
 <style lang="scss" scoped>
-.sign-in-form-wrapper {
-  border: 1px solid rgba(0, 0, 0, .2);
-  border-radius: 8px;
-  width: 480px;
-  margin: 0 auto;
-  padding: 15px;
+  .sign-in-form-wrapper {
+    padding: 2rem;
+    margin: 0 auto;
+    max-width: 480px;
+    border: solid 1px rgba(0,0,0,.12);
+    border-radius: 8px;
+    flex-grow: 1;
+  }
 
   .sign-in-form {
-    max-width: 400px;
-    flex-grow: 1;
+    padding-top: 1rem;
 
-    &__header{
+    h2 {
       text-align: center;
-      margin: 20px;
     }
 
-    button {
-      margin: 15px 0;
-      width: 100%;
+    &__input {
+      margin-top: 20px;
+    }
+
+    &__button {
+      margin-top: 32px;
+      margin-bottom: 16px;
+    }
+
+    &__toggle {
+      color: var(--color-primary);
+      cursor: pointer;
     }
   }
-}
+
 </style>
