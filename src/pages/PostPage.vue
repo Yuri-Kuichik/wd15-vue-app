@@ -1,20 +1,12 @@
-<script>
+<script setup>
 import { usePostsStore } from '@/stores/posts';
+import { useRoute } from 'vue-router'
 
-export default {
-  setup() {
-    const postsStore = usePostsStore();
+const postsStore = usePostsStore();
+const route = useRoute();
 
-    return { postsStore }
-  },
-
-  async created() {
-    await this.postsStore.getPost(this.$route.params.id)
-  },
-}
+postsStore.getPost(route.params?.id)
 </script>
-
-
 
 <template>
   <BaseLayout>

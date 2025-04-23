@@ -1,45 +1,33 @@
-<script>
-import { useAuthStore } from '@/stores/auth';
+<script setup>
+import {useAuthStore} from '@/stores/auth';
+import {ref} from "vue";
 
-export default {
-  setup() {
-    const authStore = useAuthStore()
+const authStore = useAuthStore(),
+    isShowForm = ref(false),
+    isShowModal = ref(false),
+    newEmail = ref(''),
+    password = ref('');
 
-    return { authStore }
-  },
+function openFormNewEmail() {
+  closeConfirmModalWindow();
+  isShowForm.value = true;
+}
 
-  data() {
-    return {
-      isShowForm: false,
-      isShowModal: false,
-      newEmail: '',
-      password: ''
-    }
-  }, 
+function closeFormNewEmail() {
+  isShowModal.value = false;
+}
 
-  methods: {
-    openFormNewEmail() {
-      this.closeConfirmModalWindow();
-      this.isShowForm = true;
-    },
+function openConfirmModalWindow() {
+  isShowModal.value = true;
+}
 
-    closeFormNewEmail() {
-      this.isShowForm = false;
-    },
+async function changeEmail() {
+  await authStore.setNewEmail(password.value, newEmail.value);
+  closeFormNewEmail();
+}
 
-    changeEmail() {
-      this.authStore.setNewEmail(this.password, this.newEmail);
-      this.closeFormNewEmail();
-    },
-
-    openConfirmModalWindow() {
-      this.isShowModal = true;
-    },
-
-    closeConfirmModalWindow() {
-      this.isShowModal = false;
-    }
-  }
+function closeConfirmModalWindow() {
+  isShowModal.value = false;
 }
 </script>
 
@@ -61,31 +49,31 @@ export default {
           <BaseButton @click="closeConfirmModalWindow">
             <span>Нет</span>
           </BaseButton>
-        </div> 
+        </div>
       </template>
     </BaseModal>
 
     <form v-if="isShowForm" class="sign-in-form">
       <h2>Sign In</h2>
-      <BaseInput 
-        class="sign-in-form__input"
-        v-model="newEmail"
-        label="Email"
-        placeholder="Input your email"
-        name="email"
+      <BaseInput
+          class="sign-in-form__input"
+          v-model="newEmail"
+          label="Email"
+          placeholder="Input your email"
+          name="email"
       />
-      <BaseInput 
-        class="sign-in-form__input"
-        v-model="password"
-        label="Password"
-        placeholder="Input your passowrd"
-        name="password"
+      <BaseInput
+          class="sign-in-form__input"
+          v-model="password"
+          label="Password"
+          placeholder="Input your passowrd"
+          name="password"
       />
 
-      <BaseButton 
-        class="sign-in-form__button"
-        @click.prevent="changeEmail"  
-        :loading="authStore.loading"
+      <BaseButton
+          class="sign-in-form__button"
+          @click.prevent="changeEmail"
+          :loading="authStore.loading"
       >
         <span>Send</span>
       </BaseButton>
@@ -95,7 +83,7 @@ export default {
 </template>
 
 <style scoped>
-  .first-btn {
-    margin-right: 12px;
-  }
+.first-btn {
+  margin-right: 12px;
+}
 </style>

@@ -9,7 +9,7 @@ const { isMounted } = useMounted();
 
 onMounted(() => {
   console.log('Dom is ready')
-}) 
+})
 </script>
 
 <template>
@@ -18,7 +18,7 @@ onMounted(() => {
     <div v-else class="spinner-wrapper d-flex d-flex_jcc d-flex_aic">
       <VueSpinner size="l"/>
     </div>
-  </BaseLayout> 
+  </BaseLayout>
 </template>
 
 
