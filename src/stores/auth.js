@@ -130,18 +130,6 @@ export const useAuthStore = defineStore('auth', {
       cookie.set(this.refreshTokenKey, this.refreshToken)
     },
 
-    isAuth() {
-      return !!cookie.get(this.tokenKey);
-    },
-
-    isTokenExist() {
-      this.isAuth();
-    },
-
-    isRefreshTokenExist() {
-      return !!cookie.get(this.refreshTokenKey);
-    },
-
     removeCookie() {
       cookie.remove(this.tokenKey);
       cookie.remove(this.refreshTokenKey);
@@ -151,6 +139,19 @@ export const useAuthStore = defineStore('auth', {
       this.accessToken = '';
       this.refreshToken = '';
       this.removeCookie();
-    }
+    },
+
+    isAuth() {
+      return !!cookie.get(this.tokenKey);
+      // return true
+    },
+
+    isTokenExist() {
+      this.isAuth();
+    },
+
+    isRefreshTokenExist() {
+      return !!cookie.get(this.refreshTokenKey);
+    },
   }
 })

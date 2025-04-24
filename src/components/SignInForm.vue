@@ -1,44 +1,45 @@
-<script>
+<script setup>
+import { shallowRef, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth'
 
-export default {
-  setup() {
-    const authStore = useAuthStore();
+const authStore = useAuthStore();
 
-    return { authStore }
-  },
+const email = shallowRef(''),
+      password = shallowRef(''),
+      passwordFieldType = shallowRef('');
 
-  data() {
-    return {
-      email: '',
-      password: '',
-      passwordFieldType: 'password',
-      passwordMsgError: '',
-      emailMsgErr: '',
-    }
-  },
+const isFormCompleted = computed(() => {
+  return email.value.length && isPasswordValid.value && isValidEmail()
+})
 
-  methods: {
-    switchVisibilityPassword() {
-      this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
-    },
+const passwordMsgError = computed(() => {
+  return isPasswordValid.value ? '' : 'пароль слишком короткий'
+})
 
-    async login() {
-      const data = {
-        email: this.email,
-        password: this.password,
-      }
+const emailMsgError = computed(() => {
+  return email.value.length && isValidEmail() ? '' : 'не корректный email'
+})
 
-      this.authStore.signIn(data);
-    }
-  },
+const isPasswordValid = computed(() => {
+  return password.value.length > 5
+})
 
-  computed: {
-    isFormCompleted() {
-      const arr = [this.email, this.password]
-      return arr.every( item => !!item.toString().length )
-    }
+function isValidEmail() {
+  const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
+  return EMAIL_REGEXP.test(email.value)
+}
+
+function switchVisibilityPassword() {
+  passwordFieldType.value = passwordFieldType.value === 'password' ? 'text' : 'password'
+}
+
+function login() {
+  const data = {
+    email: email.value,
+    password: password.value,
   }
+
+  authStore.signIn(data)
 }
 
 </script>
@@ -53,7 +54,7 @@ export default {
         v-model="email"
         label="Email"
         placeholder="Input your email"
-        :error-message="emailMsgErr"
+        :error-message="emailMsgError"
         name="email"
       />
       <BaseInput 

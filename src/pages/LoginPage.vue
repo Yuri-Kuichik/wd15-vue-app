@@ -1,36 +1,28 @@
-<script>
+<script setup>
+import { ref, computed } from 'vue'
+
 import SignInForm from '@/components/SignInForm.vue';
 import RegistrationForm from '@/components/RegistrationForm.vue'
 
-export default {
-  components: {
-    SignInForm, 
-    RegistrationForm
-  },
+const currentComponent = ref('SignInForm');
 
-  data() {
-    return {
-      currentComponent: 'SignInForm',
-    }
-  },
-
-  methods: {
-    toggleComponent() {
-      this.currentComponent = this.isSignInForm ? 'RegistrationForm' : 'SignInForm'
-    }
-  },
-
-  computed: {
-    isSignInForm() {
-      return this.currentComponent === 'SignInForm'
-    }
-  }
+function toggleComponent() {
+  console.log('toggleComponent')
+  currentComponent.value = isSignInForm.value ? 'RegistrationForm' : 'SignInForm'
 }
+
+const isSignInForm = computed(() => {
+  return currentComponent.value === 'SignInForm'
+})
+
 </script>
 
 <template>
   <BaseLayout class="login-page">
-    <component :is="currentComponent" @toggle="toggleComponent"/>
+    <component 
+      :is="isSignInForm ? SignInForm : RegistrationForm" 
+      @toggle="toggleComponent"
+    />
   </BaseLayout>
 </template>
 

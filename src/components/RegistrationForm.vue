@@ -1,77 +1,63 @@
-<script>
+<script setup>
+import { shallowRef, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth'
 
-export default {
-  setup() {
-    const authStore = useAuthStore()
+const authStore = useAuthStore();
 
-    return { authStore }
-  },
+const name = shallowRef(''),
+      email = shallowRef(''),
+      password = shallowRef(''),
+      courseGroupId = shallowRef(15),
+      emailMsgErr = shallowRef(''),
+      passwordMsgError = shallowRef(''),
+      passwordFieldType = shallowRef('password'),
+      isShowActivateForm = shallowRef(false),
+      activateUrl = shallowRef('');
 
-  data() {
-    return {
-      name: '',
-      email: '',
-      password: '',
-      courseGroupId: 15,
-      emailMsgErr: '',
-      passwordMsgError: '',
-      passwordFieldType: 'password',
-      isShowActivateForm: false,
-      activateUrl: ''
-    }
-  },
+const isFormCompleted = computed(() => {
+  const arr = [name.value, email.value, password.value, courseGroupId.value]
 
-  methods: {
-    switchVisibilityPassword() {
-      this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
-    },
+  return arr.every( item => !!item.toString().length ) 
+})
 
-    async createUser() {
-
-      const data = {
-        username: this.name,
-        email: this.email,
-        password: this.password,
-        course_group: this.courseGroupId
-      }
-
-      this.authStore.createUser(data);
-    },
-
-    // после регистрации и того, как пришло письмо с url на почту, и вы сохранили этот url здесь в state -> url, 
-    // отправляем полученные данные на сервер для активации профиля
-    async activateUser() {
-      const data = this.getDataUserFromUrl();
-
-      this.authStore.activateUser(data)
-    },
-
-    // этот метод для получения нашего uid и token в формате объекта из строки url
-    // этот url вам должет придти на почту после регистрации. 
-    // Пример: 'https://studapi.teachmeskills.by//activate/ODYwNw/ccdl27-bd7b740f22b991613865d1d739d5abba'
-    getDataUserFromUrl() {
-      const str = this.activateUrl.split('activate/')[1]
-
-      const uid = str.split('/')[0]
-      const token = str.split('/')[1]
-
-      return {uid, token}
-    },
-
-    showActivateForm() {
-      this.isShowActivateForm = true;
-    }
-  },
-
-  computed: {
-    isFormCompleted() {
-      const arr = [this.name, this.email, this.password, this.courseGroupId]
-
-      return arr.every( item => !!item.toString().length )
-    }
-  }
+function switchVisibilityPassword() {
+  passwordFieldType.value = passwordFieldType.value === 'password' ? 'text' : 'password'
 }
+
+function createUser() {
+  const data = {
+    username: name.value,
+    email: email.value,
+    password: password.value,
+    course_group: courseGroupId.value
+  }
+
+  authStore.createUser(data)
+}
+
+// после регистрации и того, как пришло письмо с url на почту, и вы сохранили этот url здесь в state -> url, 
+    // отправляем полученные данные на сервер для активации профиля
+function activateUser() {
+  const data = getDataUserFromUrl();
+
+  authStore.activateUser(data)
+}
+
+ // этот метод для получения нашего uid и token в формате объекта из строки url
+  // этот url вам должет придти на почту после регистрации. 
+  // Пример: 'https://studapi.teachmeskills.by//activate/ODYwNw/ccdl27-bd7b740f22b991613865d1d739d5abba'
+  function getDataUserFromUrl() {
+    const str = activateUrl.value.split('activate/')[1]
+
+    const uid = str.split('/')[0]
+    const token = str.split('/')[1]
+
+    return {uid, token}
+  }
+
+  function showActivateForm() {
+    isShowActivateForm.value = true;
+  }
 
 </script>
 
@@ -132,7 +118,7 @@ export default {
       </p>
       <BaseButton 
         class="registration-form__button"
-        @click="showActivateForm" 
+        @click.prevent="showActivateForm" 
       >
         <span>Activate</span>
       </BaseButton>

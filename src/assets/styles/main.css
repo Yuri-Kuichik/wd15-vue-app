@@ -1,5 +1,7 @@
 @import './base.css';
 @import './d-flex.css';
+/* @import 'element-plus/dist/index.css';
+@import 'element-plus/theme-chalk/dark/css-vars.css'; */
 
 html, body, #app {
   height: 100%;
@@ -13,6 +15,16 @@ html, body, #app {
   width: 100%;
   font-weight: normal;
 } */
+
+html {
+  /* background: var(--color-background); */
+  --el-bg-color: var(--color-background);
+}
+
+html.dark {
+  /* custom dark bg color */
+  --el-bg-color: #626aef;
+}
 
 .main-wrapper {
   
