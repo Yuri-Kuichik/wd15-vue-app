@@ -1,35 +1,95 @@
 <script setup>
-import { ref, computed, shallowRef } from 'vue';
+import {ref, computed} from 'vue';
 
-const count = shallowRef(0); // {value: 0}
-const title = shallowRef('Counter page');
+const count = ref(0); // {value: 0}, оборачивает в объект
 
-const increment = () => {
-  count.value++
-}
+const decrease = () => count.value--;
+const increase = () => count.value++;
 
-function decrement() {
-  count.value--
-}
-
-const dubleCount = computed(() => {
-  return count.value * 2
-})
+const doubleCount = computed(() => count.value * 2);
 </script>
 
 <template>
   <BaseLayout>
-    <h1>{{ title }}</h1>
-    <div>Counter: {{ count }}</div>
-    <div>Duble counter: {{ dubleCount }}</div>
-    <BaseButton class="btn" @click="increment">Increment</BaseButton>
-    <BaseButton class="btn" @click="decrement">Decrement</BaseButton>
+    <section class="counter-section">
+      <div class="counter-wrapper">
+        <h2 class="counter-title">Counter</h2>
+
+        <div>
+          <span class="counter-text">Value: {{ count }}</span>
+        </div>
+        <div>
+          <span class="counter-text">Double value: {{ doubleCount }}</span>
+        </div>
+        <div class="counter-buttons-wrapper">
+          <button class="counter-button" @click="increase"> +</button>
+          <button class="counter-button" @click="decrease"> -</button>
+        </div>
+      </div>
+    </section>
   </BaseLayout>
 </template>
 
-<style scoped>
-.btn {
-  max-width: 200px;
-  margin-top: 20px;
+<style lang="scss" scoped>
+.counter-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.counter-wrapper {
+  margin: auto;
+  max-width: 250px;
+  text-align: center;
+}
+
+.counter-buttons-wrapper {
+  display: flex;
+  column-gap: 25px;
+  padding: 20px;
+}
+
+button {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  background: rgb(253, 211, 42);
+  color: rgb(7, 7, 7);
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  height: 48px;
+  min-width: 48px;
+  max-width: 100%;
+
+  &.disabled {
+    cursor: cell;
+    background: rgba(253, 211, 42, 0.5);
+  }
+}
+
+input {
+  padding: 8px 12px;
+  width: 100%;
+  min-height: 32px;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.5;
+  cursor: pointer;
+  background: var(--color-white) !important;
+  margin-bottom: 12px;
+  max-width: 240px;
+
+  &::placeholder {
+    color: rgba(0, 0, 0, .26);
+  }
+
+  &:focus-visible {
+    border-color: rgb(253, 211, 42);
+  }
 }
 </style>
